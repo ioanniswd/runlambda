@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
-var exec = require('child_process').exec;
-var fs = require('fs');
+"use strict";
+
+const exec = require('child_process').exec;
+const fs = require('fs');
+const colors = require('colors');
 
 var invokeFolder = process.cwd();
 
@@ -19,27 +22,39 @@ function execute(command) {
   });
 }
 
-if (invokeFolder.indexOf('lambdafns') == -1) {
-  console.log('You are in the wrong folder, path must be under lambdafns');
-} else {
-  command = 'aws lambda invoke --function-name ${PWD##*/} outfile';
-  // if we have payload
-  if(process.argv[2]) {
-    fs.readFile(process.argv[2], function(err, data) {
-      if(err) {
-        throw err;
-      } else {
-        console.log('data');
-        var payloadFile = JSON.parse(data.toString('utf-8'));
-        payloadFile = JSON.stringify(payloadFile);
-        payloadFile = payloadFile.replace(/"/g, '\\"');
-        command += ' --payload "' + payloadFile + '"';
-        console.log('command: ', command);
-
-        execute(command);
-      }
-    });
+fs.readFile('package.json', 'utf-8', function(err, data) {
+  if (err) {
+    throw (err);
   } else {
-    execute(command);
+    data = JSON.parse(data.toString('utf-8'));
+    let functionName = data.name;
+
+    command = `aws lambda invoke --function-name ${functionName} outfile`;
+
+    if(data.lambdaAlias) {
+      console.log(colors.blue('Running lambda alias:', data.lambdaAlias));
+      command += ` --qualifier ${data.lambdaAlias}`;
+    } else{
+      console.log(colors.blue('Running lambda $LATEST, no lambdaAlias found in package.json'));
+    }
+    // if we have payload
+    if (process.argv[2]) {
+      fs.readFile(process.argv[2], function(err, data) {
+        if (err) {
+          throw err;
+        } else {
+          console.log('data');
+          var payloadFile = JSON.parse(data.toString('utf-8'));
+          payloadFile = JSON.stringify(payloadFile);
+          payloadFile = payloadFile.replace(/"/g, '\\"');
+          command += ' --payload "' + payloadFile + '"';
+          console.log('command: ', command);
+
+          execute(command);
+        }
+      });
+    } else {
+      execute(command);
+    }
   }
-}
+});
