@@ -5,10 +5,13 @@
 const exec = require('child_process').exec;
 const fs = require('fs');
 const colors = require('colors');
+const minimist = require('minimist');
 
 var invokeFolder = process.cwd();
 
 var command;
+
+var args = minimist(process.argv.slice(2));
 
 function execute(command) {
   exec(command, function(err, stdout, stderr) {
@@ -45,6 +48,9 @@ fs.readFile('package.json', 'utf-8', function(err, data) {
         } else {
           console.log('data');
           var payloadFile = JSON.parse(data.toString('utf-8'));
+          if(args.name) {
+            payloadFile = payloadFile[args.name];
+          }
           payloadFile = JSON.stringify(payloadFile);
           payloadFile = payloadFile.replace(/"/g, '\\"');
           command += ' --payload "' + payloadFile + '"';
