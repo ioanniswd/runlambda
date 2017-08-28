@@ -7,6 +7,8 @@ const fs = require('fs');
 const colors = require('colors');
 const minimist = require('minimist');
 
+const getBranches = require('./getBranches');
+
 var invokeFolder = process.cwd();
 
 var command;
@@ -34,10 +36,22 @@ fs.readFile('package.json', 'utf-8', function(err, data) {
 
     command = `aws lambda invoke --function-name ${functionName} outfile`;
 
-    if(data.lambdaAlias) {
-      console.log(colors.blue('Running lambda alias:', data.lambdaAlias));
-      command += ` --qualifier ${data.lambdaAlias}`;
-    } else{
+    if (data.lambdaAlias) {
+      getBranches(function(err, currentBranch, otherBranches) {
+        if (err) {
+          throw err;
+
+        } else {
+          if (currentBranch == data.lambdaAlias) {
+            console.log(colors.blue('Running lambda alias:', data.lambdaAlias));
+            command += ` --qualifier ${data.lambdaAlias}`;
+
+          } else {
+            console.log(colors.blue('Running lambda $LATEST, lambdaAlias is not the same as branch name'));
+          }
+        }
+      });
+    } else {
       console.log(colors.blue('Running lambda $LATEST, no lambdaAlias found in package.json'));
     }
     // if we have payload
@@ -48,7 +62,7 @@ fs.readFile('package.json', 'utf-8', function(err, data) {
         } else {
           console.log('data');
           var payloadFile = JSON.parse(data.toString('utf-8'));
-          if(args.name) {
+          if (args.name) {
             payloadFile = payloadFile[args.name];
           }
           payloadFile = JSON.stringify(payloadFile);
