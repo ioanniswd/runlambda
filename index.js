@@ -62,9 +62,17 @@ fs.readFile('package.json', 'utf-8', function(err, data) {
         } else {
           console.log('data');
           var payloadFile = JSON.parse(data.toString('utf-8'));
+
           if (args.name) {
             payloadFile = payloadFile[args.name];
           }
+
+          if(data.lambdaAlias) {
+            payloadFile.requestContext = {
+              stage: data.lambdaAlias
+            };
+          }
+          
           payloadFile = JSON.stringify(payloadFile);
           payloadFile = payloadFile.replace(/"/g, '\\"');
           command += ' --payload "' + payloadFile + '"';
