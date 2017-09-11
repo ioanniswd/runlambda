@@ -12,8 +12,11 @@ const getBranches = require('./getBranches');
 var invokeFolder = process.cwd();
 
 var command;
+var alias;
 
-var args = minimist(process.argv.slice(2));
+var args = minimist(process.argv.slice(2), {
+  boolean: ['published']
+});
 
 function execute(command) {
   exec(command, function(err, stdout, stderr) {
@@ -36,53 +39,60 @@ fs.readFile('package.json', 'utf-8', function(err, data) {
 
     command = `aws lambda invoke --function-name ${functionName} outfile`;
 
-    if (data.lambdaAlias) {
-      getBranches(function(err, currentBranch, otherBranches) {
-        if (err) {
-          throw err;
+    alias = data.lambdaAlias;
 
-        } else {
-          if (currentBranch == data.lambdaAlias) {
-            console.log(colors.blue('Running lambda alias:', data.lambdaAlias));
-            command += ` --qualifier ${data.lambdaAlias}`;
+    getBranches(function(err, currentBranch, otherBranches) {
+      if (err) {
+        throw err;
+
+      } else {
+        if (alias) {
+          if (currentBranch == alias && args.published) {
+            console.log(colors.blue('Running lambda alias:', alias));
+            command += ` --qualifier ${alias}`;
 
           } else {
-            console.log(colors.blue('Running lambda $LATEST, lambdaAlias is not the same as branch name'));
+            console.log(colors.blue('Running lambda $LATEST'));
           }
-        }
-      });
-    } else {
-      console.log(colors.blue('Running lambda $LATEST, no lambdaAlias found in package.json'));
-    }
-    // if we have payload
-    if (process.argv[2]) {
-      fs.readFile(process.argv[2], function(err, data) {
-        if (err) {
-          throw err;
         } else {
-          console.log('data');
-          var payloadFile = JSON.parse(data.toString('utf-8'));
+          console.log(colors.blue('Running lambda $LATEST, no lambdaAlias found in package.json'));
+        }
 
-          if (args.name) {
-            payloadFile = payloadFile[args.name];
-          }
+        // if we have payload
+        if (process.argv[2]) {
+          fs.readFile(process.argv[2], function(err, data) {
+            if (err) {
+              throw err;
+            } else {
+              console.log('data');
+              var payloadFile = JSON.parse(data.toString('utf-8'));
 
-          if(data.lambdaAlias) {
-            payloadFile.requestContext = {
-              stage: data.lambdaAlias
-            };
-          }
-          
-          payloadFile = JSON.stringify(payloadFile);
-          payloadFile = payloadFile.replace(/"/g, '\\"');
-          command += ' --payload "' + payloadFile + '"';
-          console.log('command: ', command);
+              if (args.name) {
+                payloadFile = payloadFile[args.name];
+              }
 
+              if (args.published) {
+                if (alias) {
+                  payloadFile.requestContext = {
+                    stage: alias
+                  };
+                } else {
+                  throw new Error('Lambda alias does not exist, cannot run published version');
+                }
+              }
+
+              payloadFile = JSON.stringify(payloadFile);
+              payloadFile = payloadFile.replace(/"/g, '\\"');
+              command += ' --payload "' + payloadFile + '"';
+              console.log('command: ', command);
+
+              execute(command);
+            }
+          });
+        } else {
           execute(command);
         }
-      });
-    } else {
-      execute(command);
-    }
+      }
+    });
   }
 });
