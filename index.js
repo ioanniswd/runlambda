@@ -79,6 +79,10 @@ fs.readFile('package.json', 'utf-8', function(err, data) {
                 } else {
                   throw new Error('Lambda alias does not exist, cannot run published version');
                 }
+              } else {
+                payloadFile.requestContext = {
+                  stage: 'dev'
+                };
               }
 
               payloadFile = JSON.stringify(payloadFile);
