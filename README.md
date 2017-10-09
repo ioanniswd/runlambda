@@ -3,11 +3,12 @@
 ~$ sudo npm install -g runlambda
 ```
 
+## Arguments
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [payload] | <code>json</code> | none | Payload for invocation |
+| [payload] | <code>json file</code> | none | Payload for lambda invocation |
 | [name] | <code>attribute</code> | none | Which specific attribute from payload.json to use as payload |
-| [published] | <code>boolean</code> | false | Whether to invoke lambda alias instead of $LATEST |
+| [published] | <code>boolean</code> | false | Whether to invoke the lambda alias (found in package json) instead of $LATEST |
 
 ## Usage
 
@@ -17,7 +18,7 @@
 ```
 **Runs lambda function with alias the lambdaAlias found in package json:**
 ```bash
-~/repos/lambda_function$ runlambda
+~/repos/lambda_function$ runlambda --published
 ```
 
 **Runs lambda function with payload the json file:**
