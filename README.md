@@ -21,6 +21,12 @@
 ~/repos/lambda_function$ runlambda --published
 ```
 
+**Runs lambda function and shows the Response**
+```bash
+~/repos/lambda_function$ runlambda --verbose
+```
+
+
 **Runs lambda function with payload the json file:**
 ```sh
 ~/repos/lambda_function$ runlambda payload.json
