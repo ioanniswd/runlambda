@@ -73,8 +73,6 @@ read('package.json', 'utf-8')
             };
           }
 
-          payloadFile = JSON.stringify(payloadFile);
-          payloadFile = payloadFile.replace(/"/g, '\\"');
           params.Payload = JSON.stringify(payloadFile);
           return Promise.resolve();
         });
