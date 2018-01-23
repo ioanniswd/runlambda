@@ -55,8 +55,8 @@ read('package.json', 'utf-8')
     } else console.log(colors.blue('Running lambda $LATEST, no lambdaAlias found in package.json'));
 
     // if we have payload
-    if (process.argv[2]) {
-      return read(process.argv[2], 'utf-8')
+    if (args.payload) {
+      return read(args.payload, 'utf-8')
         .then(payloadFile => {
           if (args.name) payloadFile = payloadFile[args.name];
 

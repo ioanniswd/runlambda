@@ -29,7 +29,7 @@
 
 **Runs lambda function with payload the json file:**
 ```sh
-~/repos/lambda_function$ runlambda payload.json
+~/repos/lambda_function$ runlambda --payload payload.json
 // payload.json:
 // {
 //   store_id: 'store_id',
@@ -39,7 +39,7 @@
 
 **Runs lambda function with payload an object in json file:**
 ```sh
-~/repos/lambda_function$ runlambda payload.json --name payload2
+~/repos/lambda_function$ runlambda --payload payload.json --name payload2
 // payload.json:
 // {
 //   payload1: {
@@ -55,5 +55,5 @@
 
 **Example**
 ```sh
-~/repos/createorder$ runlambda payload.json --name demo_sample_order --published
+~/repos/createorder$ runlambda --payload payload.json --name demo_sample_order --published
 ```
