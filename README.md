@@ -26,6 +26,10 @@
 ~/repos/lambda_function$ runlambda --verbose
 ```
 
+**Runs lambda function and simulates prodv4_6 version**
+```bash
+~/repos/lambda_function$ runlambda --simver prodv4_6
+```
 
 **Runs lambda function with payload the json file:**
 ```sh
@@ -55,5 +59,5 @@
 
 **Example**
 ```sh
-~/repos/createorder$ runlambda --payload payload.json --name demo_sample_order --published
+~/repos/createorder $ runlambda --payload payload.json --name demo_sample_order --published --simver prodv4_6 --verbose
 ```

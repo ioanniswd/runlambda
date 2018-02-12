@@ -69,8 +69,10 @@ read('package.json', 'utf-8')
 
           } else {
             payloadFile.requestContext = {
-              stage: 'dev'
+              stage: args.simver || 'dev'
             };
+
+            console.log('\n' + colors.blue(`Simulating version:${payloadFile.requestContext.stage}`));
           }
 
           params.Payload = JSON.stringify(payloadFile);
