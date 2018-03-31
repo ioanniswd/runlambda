@@ -1,3 +1,6 @@
+[![Known Vulnerabilities](https://snyk.io/test/github/ioanniswd/runlambda/badge.svg?targetFile=package.json)](https://snyk.io/test/github/ioanniswd/runlambda?targetFile=package.json)
+
+
 ## Instalation
 ```sh
 ~$ sudo npm install -g runlambda
