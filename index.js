@@ -100,7 +100,7 @@ read('package.json', 'utf-8')
   })
   .then(Payload => {
     if (args.verbose) console.log('Response:', Payload);
-    return write('outfile', JSON.stringify(Payload));
+    return write('outfile.json', JSON.stringify(Payload));
   })
   .then(() => {
     console.log(colors.green('Success'));
