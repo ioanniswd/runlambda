@@ -11,11 +11,12 @@
   "license": "ISC",
   "preferGlobal": true,
   "bin": {
-    "runlambda": "index.js"
+    "runlambda": "./bin/index.js"
   },
   "dependencies": {
     "aws-sdk": "2.186.0",
     "colors": "1.2.4",
+    "lodash": "4.17.10",
     "minimist": "^1.2.0"
   },
   "devDependencies": {

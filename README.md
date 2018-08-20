@@ -6,6 +6,9 @@
 ~$ sudo npm install -g runlambda
 ```
 
+## Requirements
+[uplambda](https://github.com/ioanniswd/uplambda) CLI tool to upload code to an AWS Lambda Function and handle AWS API Gateway and permissions. Creates config .uplambda.json file used for usage with multiple AWS accounts.
+
 ## Arguments
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |

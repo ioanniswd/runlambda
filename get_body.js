@@ -3,7 +3,7 @@
 const zlib = require('zlib');
 
 module.exports = function(Payload) {
-  var body;
+  let body;
   // console.log('Payload:', Payload);
   // if request is made through API GW
 

@@ -21,7 +21,7 @@ module.exports = function() {
       else {
         let currentBranch;
         let otherBranches = [];
-        let arr = stdout.split('\n');
+        const arr = stdout.split('\n');
         arr.forEach(function(branchName) {
           if (branchName.indexOf('*') != -1) currentBranch = branchName.replace(/\*\s/g, '');
           else otherBranches.push(branchName.replace(/\s/g, ''));
